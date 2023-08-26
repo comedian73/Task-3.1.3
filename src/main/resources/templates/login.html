@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="https://www.thymeleaf.org" xmlns:sec="https://www.thymeleaf.org/thymeleaf-extras-springsecurity3" lang="ru">
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+    <title>Страница авторизации</title>
+    <style>
+        .button {
+            display: inline-block;
+            padding: 5px 13px;
+            font-size: 16px;
+            cursor: pointer;
+            text-align: center;
+            text-decoration: none;
+            outline: none;
+            color: #fff;
+            background-color: #4CAF50;
+            border: none;
+            border-radius: 5px;
+            box-shadow: 0 4px #999;
+        }
+
+        .button:hover {
+            text-decoration: none;
+            background-color: #3e8e41;}
+
+        .button:active {
+            text-decoration: none;
+            background-color: #3e8e41;
+            box-shadow: 0 5px #666;
+            transform: translateY(4px);
+        }
+        .link {
+            display: inline-block;
+            text-decoration: none;
+            outline: none;
+            padding: 4px 6px;
+            font-size: 14px;
+            color: #000;
+            cursor: pointer;
+            text-align: center;
+            background-color: #5e8c61;
+            border: none;
+            border-radius: 10px;
+            box-shadow: 0 2px #999;
+            margin: 20px;
+        }
+        .link:hover {
+            background-color: #3e8e41;
+            color: #000;
+            text-decoration: none;}
+
+        .link:active {
+            background-color: #3e8e41;
+            box-shadow: 0 3px #666;
+            color: #000;
+            transform: translateY(4px);
+            text-decoration: none;
+        }
+    </style>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css">
+    <link rel="stylesheet" href="main.css">
+</head>
+<body>
+<div>
+    <div>
+        <div style="margin-top:20px" align="center">
+            <div>
+                <form th:action="@{/login}" method="post">
+                    <fieldset>
+                        <h1>Страница авторизации</h1>
+
+                        <div th:if="${param.error}">
+                            <div style="color: red">
+                                Не верный логин или пароль.
+                            </div>
+                        </div>
+                        <div th:if="${param.logout}">
+                            <div style="color: red">
+                                Вы вышли из системы.
+                            </div>
+                        </div>
+                        <div>
+                            <input type="text" name="username" id="username" placeholder="Логин" required="true">
+                        </div>
+                        <p>
+                        <div>
+                            <input type="password" name="password" id="password" placeholder="Пароль">
+                        </div>
+                        <p>
+                        <div>
+                            <div>
+                                <input type="submit" value="Вход" class="button"/>
+                            </div>
+                        </div>
+                    </fieldset>
+                </form>
+                <p>
+                    <a href="/" class="link">Главная</a>
+                    <a href="/registration" class="link">Регистрация</a>
+            </div>
+        </div>
+    </div>
+</div>
+</body>
+</html>

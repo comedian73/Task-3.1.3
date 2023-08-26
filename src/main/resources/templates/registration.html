@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="https://www.thymeleaf.org"
+      lang="ru">
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+    <title>Страница регистрации</title>
+    <style>
+        .button {
+            display: inline-block;
+            padding: 6px 9px;
+            font-size: 16px;
+            cursor: pointer;
+            text-align: center;
+            text-decoration: none;
+            outline: none;
+            color: #fff;
+            background-color: #4CAF50;
+            border: none;
+            border-radius: 15px;
+            box-shadow: 0 4px #999;
+        }
+        .button:hover {
+            text-decoration: none;
+            background-color: #3e8e41;}
+        .button:active {
+            text-decoration: none;
+            background-color: #3e8e41;
+            box-shadow: 0 5px #666;
+            transform: translateY(4px);
+        }
+        .otstup {
+            margin-top: 80px;
+            margin-bottom: 30px;
+        }
+    </style>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css">
+</head>
+<body>
+        <div align="center">
+
+            <form th:action="@{/registration}" th:object="${userForm}" method="post">
+                <fieldset>
+                    <h2 class="otstup">Регистрация</h2>
+
+                    <div>
+                        <input type="text" th:field="*{username}" name="username" placeholder="Логин *">
+                        <th:block th:if="${#fields.hasErrors('username')}">
+                            <div style="color : red"  th:errors="*{username}">invalid</div>
+                        </th:block>
+                    </div>
+                <p>
+                    <div>
+                        <input type="text" th:field="*{firstName}" name="firstName" placeholder="Имя">
+<!--                        <th:block th:if="${#fields.hasErrors('username')}">-->
+<!--                            <div style="color : red"  th:errors="*{username}">invalid</div>-->
+<!--                        </th:block>-->
+                    </div>
+                    <p>
+                    <div>
+                        <input type="text" th:field="*{lastName}" name="lastName" placeholder="Фамилия">
+<!--                        <th:block th:if="${#fields.hasErrors('username')}">-->
+<!--                            <div style="color : red"  th:errors="*{username}">invalid</div>-->
+<!--                        </th:block>-->
+                    </div>
+                    <p>
+                    <div>
+                        <input type="text" th:field="*{email}" name="email" placeholder="E-Mail *">
+                        <th:block th:if="${#fields.hasErrors('email')}">
+                            <div style="color : red"  th:errors="*{email}">invalid</div>
+                        </th:block>
+                    </div>
+                    <p>
+                    <div>
+                        <input type="password" th:field="*{password}" name="password" placeholder="Пароль *">
+                    <th:block th:if="${#fields.hasErrors('password')}">
+                        <div style="color : red" th:errors="*{password}">invalid</div>
+                    </th:block>
+                    </div>
+                <p>
+                    <div>
+                        <input type="password" th:field="*{pasConfirm}" name="pasConfirm" placeholder="Повторите пароль *">
+                    <th:block th:if="${#fields.hasErrors('pasConfirm')}">
+                        <div style="color : red" th:errors="*{pasConfirm}">invalid</div>
+                    </th:block>
+                    </div>
+                    <p></p>
+                    <button type="submit" class="button">Зарегистрироваться</button>
+                    <div th:if="${#fields.hasErrors('global')}">
+                    <h3 style="color : red" th:each="err : ${#fields.errors('global')}" th:text="${err}"></h3>
+                    </div>
+                </fieldset>
+            </form>
+            <p></p>
+                <a href="/">Главная</a>
+        </div>
+</body>
+</html>

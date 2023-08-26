@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" xmlns:sec="https://www.thymeleaf.org/thymeleaf-extras-springsecurity3" lang="ru">
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+    <title>Изменение пользователя</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css">
+</head>
+<body>
+<div align="center">
+    <h2>Изменение пользователя</h2>
+    <form th:action="@{/admin/edit}" th:object="${user}" method="post">
+        <table border="0" cellpadding="5">
+            <tr>
+                <td>ID: </td>
+                <td th:text="${user.id}"></td>
+            </tr>
+            <tr>
+                <td>Имя: </td>
+                <td>
+                    <label>
+                        <input type="hidden" th:value="*{username}" th:field="*{username}">
+                        <input type="text" name="name" th:value="${user.firstName}" th:field="*{firstName}" >
+                    </label>
+                </td>
+            </tr>
+            <tr>
+                <td>Фамилия: </td>
+                <td>
+                    <label>
+                        <input type="text" name="last_name" th:value="${user.lastName}" th:field="*{lastName}">
+                    </label>
+                </td>
+            </tr>
+            <tr>
+                <td>Email: </td>
+                <td>
+                    <label>
+                        <input type="text" name="email" th:value="${user.email}" th:field="*{email}">
+                    </label>
+                    <th:block th:if="${#fields.hasErrors('email')}">
+                        <div style="color : red"  th:errors="*{email}">invalid</div>
+                    </th:block>
+                </td>
+            </tr>
+            <tr>
+                <td>Пароль: </td>
+                <td>
+                    <label>
+                        <input type="text" name="password" th:value="${user.password}" th:field="*{password}">
+                    </label>
+                    <th:block th:if="${#fields.hasErrors('password')}">
+                        <div style="color : red" th:errors="*{password}">invalid</div>
+                    </th:block>
+                </td>
+            </tr>
+            <tr>
+                <td>Подтверждение пароля: </td>
+                <td>
+                    <label>
+                        <input type="text" name="pasConfirm" th:value="${user.pasConfirm}" th:field="*{pasConfirm}">
+                    </label>
+                    <th:block th:if="${#fields.hasErrors('pasConfirm')}">
+                        <div style="color : red" th:errors="*{pasConfirm}">invalid</div>
+                    </th:block>
+                </td>
+            </tr>
+            <div th:if="${#fields.hasErrors('global')}">
+                <h3 style="color : red" th:each="err : ${#fields.errors('global')}" th:text="${err}"></h3>
+            </div>
+            <tr>
+                <input type="hidden" name="id" th:value="${user.id}" >
+                <td colspan="5"><input type="submit" value="Сохранить"></td>
+            </tr>
+        </table>
+    </form>
+</div>
+</body>
+</html>
