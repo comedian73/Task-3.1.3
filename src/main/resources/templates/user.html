@@ -1,37 +1,9 @@
 <!DOCTYPE html>
-<html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="https://www.thymeleaf.org" xmlns:sec="https://www.thymeleaf.org/thymeleaf-extras-springsecurity3" lang="ru">
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="https://www.thymeleaf.org" lang="ru">
 <head>
-    <title Страница пользователя></title>
-    <style>
-        .link {
-            display: inline-block;
-            text-decoration: none;
-            outline: none;
-            padding: 4px 6px;
-            font-size: 14px;
-            color: #000;
-            cursor: pointer;
-            text-align: center;
-            background-color: #5e8c61;
-            border: none;
-            border-radius: 10px;
-            box-shadow: 0 2px #999;
-            margin: 20px;
-        }
-        .link:hover {
-            background-color: #3e8e41;
-            color: #000;
-            text-decoration: none;}
-
-        .link:active {
-            background-color: #3e8e41;
-            box-shadow: 0 3px #666;
-            color: #000;
-            transform: translateY(4px);
-            text-decoration: none;
-        }
-    </style>
-    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css">
+    <title>Страница пользователя</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css"
+          integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
 </head>
 <body>
 <form action="/user">
@@ -57,7 +29,7 @@
     </tr>
     <p>
     <tr>
-        <td><b align="right">Фамилия: </b></td>
+        <td align="right"><b>Фамилия: </b></td>
         <td th:text="*{user.lastName}"></td>
     </tr>
     <p>
@@ -76,5 +48,8 @@
     </div>
 </div>
 </form>
+<script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js" integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1" crossorigin="anonymous"></script>
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js" integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM" crossorigin="anonymous"></script>
 </body>
 </html>

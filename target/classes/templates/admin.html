@@ -3,124 +3,90 @@
 <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
     <title>Страница администратора</title>
-    <style>
-        .link {
-            display: inline-block;
-            text-decoration: none;
-            outline: none;
-            padding: 4px 6px;
-            font-size: 14px;
-            color: #000;
-            cursor: pointer;
-            text-align: center;
-            background-color: #5e8c61;
-            border: none;
-            border-radius: 10px;
-            box-shadow: 0 2px #999;
-            margin: 20px;
-        }
-        .link:hover {
-            background-color: #3e8e41;
-            color: #000;
-            text-decoration: none;}
-
-        .link:active {
-            background-color: #3e8e41;
-            box-shadow: 0 3px #666;
-            color: #000;
-            transform: translateY(4px);
-            text-decoration: none;
-        }
-        table th, table td {
-            padding: 3px;
-            border-collapse: collapse;
-            border: 1px solid cadetblue;
-            text-align: center;
-        }
-        .btn-del {
-            cursor: pointer;
-            font-size: 12px;
-            text-align: center;
-            text-decoration: none;
-            background-color: #6e5959;
-            border: none;
-            border-radius: 5px;
-        }
-        .btn-del:hover {
-            background-color: #bd1818
-        }
-        .btn-del:active {
-            background-color: #4d1818;
-            box-shadow: 0 3px #666;
-            transform: translateY(4px);
-        }
-        .btn-edit {
-            cursor: pointer;
-            font-size: 12px;
-            text-align: center;
-            text-decoration: none;
-            background-color: #5a6b3a;
-            border: none;
-            border-radius: 5px;
-        }
-        .btn-edit:hover {background-color: #37d73d
-        }
-        .btn-edit:active {
-            background-color: #5a6b3a;
-            box-shadow: 0 3px #666;
-            transform: translateY(4px);
-        }
-    </style>
-    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css">
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css"
+          integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
 </head>
 <body>
-<div align="center">
-
-    <h1 >Список пользователей</h1>
-
-    <table cellpadding="6">
-
-        <tr>
-            <th>ID</th>
-            <th>Логин</th>
-            <th>Имя</th>
-            <th>Фамилия</th>
-            <th>Email</th>
-            <th>Пароль</th>
-            <th>Роль</th>
-            <th colspan="2">Действия</th>
-        </tr>
-
-        <tr th:each="lst : ${list}">
-            <td th:text="${lst.id}"></td>
-            <td th:text="${lst.username}"></td>
-            <td th:text="${lst.firstName}"></td>
-            <td th:text="${lst.lastName}"></td>
-            <td th:text="${lst.email}"></td>
-            <td th:text="${lst.password}"></td>
-            <td th:text="${lst.roles}" ></td>
-
-            <td th:border="0">
-                <form action="/admin/delete" method="post">
-                    <input type="hidden" name="del" th:value="${lst.id}">
-                    <input type="submit" value="Удалить" class="btn-del">
-                </form>
-            </td>
-            <td th:border="0">
-                <form action="/admin/edit" method="get" target="_self">
-                    <input type="hidden" name="edit" th:value="${lst.id}">
-                    <input type="submit" value="Изменить" class="btn-edit">
-                </form>
-            </td>
-        </tr>
-    </table>
-    <p>
-    <div>
-    <div>
-        <a href="/user" class="link">Страница пользователя</a>
+<div>
+<nav class="navbar navbar-dark bg-dark">
+    <div  class="text-light">
+        <span th:text="${user.username}" class="font-weight-bold my-1 h5"></span>
+        <span> with roles: </span>
+        <span th:text="${user.getCleanRoles()}" class="my-1"></span>
     </div>
-        <a href="#" th:href="@{/logout}" class="link">Выход</a>
+    <div class="font-weight-bold">
+        <a class="text-secondary nav-link my-2 my-sm-0" th:href="@{/logout}">Logout</a>
+    </div>
+</nav>
+</div>
+<div class="container-fluid">
+    <div class="row">
+        <div class="col-2 border border-secondary min-vh-100">
+            <div class="list-group mt-3" id="list-tab" role="tablist">
+                <a class="list-group-item list-group-item-action active" id="list-admin-list" data-toggle="list" href="#list-admin" role="tab" aria-controls="admin">Admin</a>
+                <a class="list-group-item list-group-item-action" id="list-user-list" data-toggle="list" href="#list-user" role="tab" aria-controls="user">User</a>
+            </div>
+        </div>
+
+        <div class="col border border-primary">
+            <div class="tab-content mt-3" id="nav-tabContent">
+                <div class="tab-pane fade show active" id="list-admin" role="tabpanel" aria-labelledby="list-admin-list">
+                    <ul class="nav nav-tabs" role="tablist">
+                        <li class="nav-item">
+                            <a class="nav-link active" id="user-tab" data-toggle="tab" href="#user-list" role="tab" aria-controls="user-list" aria-selected="true">Список пользователей</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" id="add-tab" data-toggle="tab" href="addUser.html" role="tab" aria-controls="add" aria-selected="false">Новый пользователь</a>
+                        </li>
+                    </ul>
+                </div>
+                <div align="center" th:action="@{/admin}" id="user-list">
+                    <h1 >Список пользователей</h1>
+                    <table class="table table-striped">
+                        <tr>
+                            <th>ID</th>
+                            <th>Логин</th>
+                            <th>Имя</th>
+                            <th>Фамилия</th>
+                            <th>Email</th>
+                            <th>Пароль</th>
+                            <th>Роль</th>
+                            <th colspan="2">Действия</th>
+                        </tr>
+                        <tr th:each="lst : ${list}">
+                            <td th:text="${lst.id}"></td>
+                            <td th:text="${lst.username}"></td>
+                            <td th:text="${lst.firstName}"></td>
+                            <td th:text="${lst.lastName}"></td>
+                            <td th:text="${lst.email}"></td>
+                            <td th:text="${lst.password}"></td>
+                            <td th:text="${lst.roles}" ></td>
+                            <td th:border="0">
+                                <form action="/admin/delete" method="post">
+                                    <input type="hidden" name="del" th:value="${lst.id}">
+                                    <input type="submit" value="Удалить">
+                                </form>
+                            </td>
+                            <td th:border="0">
+                                <form action="/admin/edit" method="get" target="_self">
+                                    <input type="hidden" name="edit" th:value="${lst.id}">
+                                    <input type="submit" value="Изменить">
+                                </form>
+                            </td>
+                        </tr>
+                    </table>
+                </div>
+                <div class="tab-pane fade" id="list-user" role="tabpanel" aria-labelledby="list-user-list">
+                    <div class="embed-responsive">
+                        <iframe class="embed-responsive-item" src="user.html"></iframe>
+                    </div>
+                </div>
+            </div>
+        </div>
     </div>
 </div>
+<script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js" integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1" crossorigin="anonymous"></script>
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js" integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM" crossorigin="anonymous"></script>
 </body>
 </html>

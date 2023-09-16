@@ -1,66 +1,69 @@
 package ru.kata.spring.boot_security.demo.controller;
 
-import org.springframework.validation.BindingResult;
-import org.springframework.validation.ObjectError;
-import org.springframework.web.bind.annotation.ModelAttribute;
-import ru.kata.spring.boot_security.demo.configs.UserRepository;
-import org.springframework.beans.factory.annotation.Autowired;
+import lombok.RequiredArgsConstructor;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import ru.kata.spring.boot_security.demo.configs.UserService;
+import org.springframework.validation.BindingResult;
+import org.springframework.web.bind.annotation.*;
 import ru.kata.spring.boot_security.demo.model.User;
+import ru.kata.spring.boot_security.demo.service.UserService;
 
 import javax.validation.Valid;
 
 @Controller
+@RequiredArgsConstructor
+@RequestMapping("/admin")
 public class AdminController {
 
-    @Autowired
-    private UserService userService;
+    private final UserService userService;
 
-    @GetMapping(value = "/admin")
-    public String userList( Model model) {
-
-        model.addAttribute("list", userService.getAll());
+    @GetMapping
+    public String userList(Authentication auth, Model model) {
+        auth = SecurityContextHolder.getContext().getAuthentication();
+        User user = (User) userService.loadUserByUsername(auth.getName());
+        model.addAttribute("list", userService.getAllUsers());
+        model.addAttribute("user", user);
         return "admin";
     }
 
-    @PostMapping (value = "/admin/delete")
+    @PostMapping (value = "/delete")
     public String deleteUser(@RequestParam(name = "del") long id) {
-
         userService.delete(id);
         return "redirect:/admin";
     }
 
-    @GetMapping(value = "/admin/edit")
-    public String edit (@RequestParam(name = "edit") long id, Model model) {
-
-        model.addAttribute("user", userService.findUserById(id));
+    @GetMapping(value = "/edit")
+    public String edit (@RequestParam(name = "edit") String username, Model model) {
+        User user = (User) userService.loadUserByUsername(username);
+        model.addAttribute("user", user);
+        model.addAttribute("listRole", userService.getAllRoles());
         return "edit";
     }
 
-    @PostMapping(value = "/admin/edit")
-    public String saveEdit (@ModelAttribute("user") @Valid User user, BindingResult result, Long id) {
-
+    @PostMapping(value = "/edit")
+    public String saveEdit (@ModelAttribute("user") @Valid User user, BindingResult result) {
         if (result.hasErrors()) {
             return "edit";
         }
+        userService.saveUser(user);
+        return "redirect:/admin";
+    }
 
-        if (!user.getPassword().equals(user.getPasConfirm())){
-            result.addError(new ObjectError("globalPassword", "Пароли не совпадают"));
+    @GetMapping(value = "/addUser")
+    public String addUser(Model model) {
+        model.addAttribute("listRole", userService.getAllRoles());
+        model.addAttribute("user", new User());
+        return "addUser";
+    }
+
+    @PostMapping(value = "/addUser")
+    public String saveAddUser(@ModelAttribute("user") @Valid User user, BindingResult result) {
+        if (result.hasErrors()) {
             return "edit";
         }
-
-        User user1 = userService.findUserById(id);
-        user1.setLastName(user.getLastName());
-        user1.setFirstName(user.getFirstName());
-        user1.setEmail(user.getEmail());
-        user1.setPassword(user.getPassword());
-        user1.setPasConfirm(user.getPasConfirm());
-        userService.saveEditUser(user1);
+        userService.saveUser(user);
         return "redirect:/admin";
     }
 }
