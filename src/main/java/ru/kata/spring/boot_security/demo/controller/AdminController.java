@@ -23,6 +23,8 @@ public class AdminController {
     public String userList(Authentication auth, Model model) {
         auth = SecurityContextHolder.getContext().getAuthentication();
         User user = (User) userService.loadUserByUsername(auth.getName());
+        model.addAttribute("listRole", userService.getAllRoles());
+        model.addAttribute("userAdd", new User());
         model.addAttribute("list", userService.getAllUsers());
         model.addAttribute("user", user);
         return "admin";
@@ -51,12 +53,12 @@ public class AdminController {
         return "redirect:/admin";
     }
 
-    @GetMapping(value = "/addUser")
-    public String addUser(Model model) {
-        model.addAttribute("listRole", userService.getAllRoles());
-        model.addAttribute("user", new User());
-        return "addUser";
-    }
+//    @GetMapping(value = "/addUser")
+//    public String addUser(Model model) {
+//        model.addAttribute("listRole", userService.getAllRoles());
+//        model.addAttribute("userAdd", new User());
+//        return "addUser";
+//    }
 
     @PostMapping(value = "/addUser")
     public String saveAddUser(@ModelAttribute("user") @Valid User user, BindingResult result) {

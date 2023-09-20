@@ -21,14 +21,15 @@
 </div>
 <div class="container-fluid">
     <div class="row">
-        <div class="col-2 border border-secondary min-vh-100">
+        <div class="col-1 col-sm-2 min-vh-100 p-0">
             <div class="list-group mt-3" id="list-tab" role="tablist">
                 <a class="list-group-item list-group-item-action active" id="list-admin-list" data-toggle="list" href="#list-admin" role="tab" aria-controls="admin">Admin</a>
-                <a class="list-group-item list-group-item-action" id="list-user-list" data-toggle="list" href="#list-user" role="tab" aria-controls="user">User</a>
+                <a class="list-group-item list-group-item-action" data-toggle="html" href="/user" role="tab">User</a>
             </div>
         </div>
 
-        <div class="col border border-primary">
+        <div class="col col-sm-10 bg-light">
+            <h1 class="mt-3">Панель администратора</h1>
             <div class="tab-content mt-3" id="nav-tabContent">
                 <div class="tab-pane fade show active" id="list-admin" role="tabpanel" aria-labelledby="list-admin-list">
                     <ul class="nav nav-tabs" role="tablist">
@@ -36,49 +37,97 @@
                             <a class="nav-link active" id="user-tab" data-toggle="tab" href="#user-list" role="tab" aria-controls="user-list" aria-selected="true">Список пользователей</a>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link" id="add-tab" data-toggle="tab" href="addUser.html" role="tab" aria-controls="add" aria-selected="false">Новый пользователь</a>
+                            <a class="nav-link" id="add-tab" data-toggle="tab" href="#addUser" role="tab" aria-controls="add" aria-selected="false">Новый пользователь</a>
                         </li>
                     </ul>
-                </div>
-                <div align="center" th:action="@{/admin}" id="user-list">
-                    <h1 >Список пользователей</h1>
-                    <table class="table table-striped">
-                        <tr>
-                            <th>ID</th>
-                            <th>Логин</th>
-                            <th>Имя</th>
-                            <th>Фамилия</th>
-                            <th>Email</th>
-                            <th>Пароль</th>
-                            <th>Роль</th>
-                            <th colspan="2">Действия</th>
-                        </tr>
-                        <tr th:each="lst : ${list}">
-                            <td th:text="${lst.id}"></td>
-                            <td th:text="${lst.username}"></td>
-                            <td th:text="${lst.firstName}"></td>
-                            <td th:text="${lst.lastName}"></td>
-                            <td th:text="${lst.email}"></td>
-                            <td th:text="${lst.password}"></td>
-                            <td th:text="${lst.roles}" ></td>
-                            <td th:border="0">
-                                <form action="/admin/delete" method="post">
-                                    <input type="hidden" name="del" th:value="${lst.id}">
-                                    <input type="submit" value="Удалить">
+                    <div class="tab-content" id="myTabContent">
+                        <div class="tab-pane fade show active" id="user-list" role="tabpanel" aria-labelledby="user-list-tab">
+                            <div th:action="@{/admin}">
+                                <div class="border rounded-top pt-2 pb-1">
+                                    <h5 class="ml-3">Список пользователей</h5>
+                                </div>
+
+                                <div class="bg-white p-3 border rounded-bottom">
+                                    <table class="table table-striped table-responsive-lg p-3">
+                                        <thead>
+                                        <tr>
+                                            <th>ID</th>
+                                            <th>Логин</th>
+                                            <th>Имя</th>
+                                            <th>Фамилия</th>
+                                            <th>Email</th>
+                                            <th>Пароль</th>
+                                            <th>Роль</th>
+                                            <th >Удалить</th>
+                                            <th >Изменить</th>
+                                        </tr>
+                                        </thead>
+                                        <tr th:each="lst : ${list}">
+                                            <td th:text="${lst.id}"></td>
+                                            <td th:text="${lst.username}"></td>
+                                            <td th:text="${lst.firstName}"></td>
+                                            <td th:text="${lst.lastName}"></td>
+                                            <td th:text="${lst.email}"></td>
+                                            <td th:text="${lst.password}"></td>
+                                            <td th:text="${lst.getCleanRoles()}" ></td>
+                                            <td th:border="0">
+                                                <form action="/admin/delete" method="post">
+                                                    <input type="hidden" name="del" th:value="${lst.id}">
+                                                    <input type="submit" value="Удалить" class="btn btn-danger">
+                                                </form>
+                                            </td>
+                                            <td th:border="0">
+                                                <form action="/admin/edit" method="get" target="_self">
+                                                    <input type="hidden" name="edit" th:value="${lst.id}">
+                                                    <input type="submit" value="Изменить" class="btn btn-info">
+                                                </form>
+                                            </td>
+                                        </tr>
+                                    </table>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="tab-pane fade" id="addUser" role="tabpanel" aria-labelledby="add-tab">
+                            <div class="border rounded-top pt-2 pb-1">
+                                <h5 class="ml-3">Добавление пользователя</h5>
+                            </div>
+                            <div class="bg-white border rounded-bottom">
+                                <div class="w-25 mx-auto py-3">
+                                <form th:action="@{/admin/addUser}" th:object="${userAdd}" method="post">
+                                    <div class="form-group ">
+                                        <p class="font-weight-bold h5 ">Логин</p>
+                                        <input type="text" class="form-control" id="login" aria-describedby="login" placeholder="Логин" th:field="*{username}">
+                                    </div>
+                                    <div class="form-group">
+                                        <label for="first_name" class="font-weight-bold mx-auto h5">Имя</label>
+                                        <input type="text" class="form-control" id="first_name" aria-describedby="first_name" placeholder="Имя" th:field="*{firstName}">
+                                    </div>
+                                    <div class="form-group">
+                                        <label for="last_name" class="font-weight-bold mx-auto h5">Фамилия</label>
+                                        <input type="text" class="form-control" id="last_name" aria-describedby="last_name" placeholder="Фамилия" th:field="*{lastName}">
+                                    </div>
+                                    <div class="form-group">
+                                        <label for="email" class="font-weight-bold mx-auto h5">Email</label>
+                                        <input type="email" class="form-control" id="email" aria-describedby="email" placeholder="Email" th:field="*{email}">
+                                    </div>
+                                    <div class="form-group">
+                                        <label for="password" class="font-weight-bold mx-auto h5">Пароль</label>
+                                        <input type="password" class="form-control" id="password" aria-describedby="password" placeholder="Пароль" th:field="*{password}">
+                                        <th:block th:if="${#fields.hasErrors('password')}">
+                                            <div style="color : red" th:errors="*{password}">invalid</div>
+                                        </th:block>
+                                    </div>
+                                    <div class="form-group">
+                                        <label for="role" class="font-weight-bold mx-auto h5">Роль</label>
+                                        <select size="2" multiple class="form-control" id="role" th:field="*{roles}">
+                                            <option th:each="lst : ${listRole}" th:value="${lst.id}" th:text="${lst.name}"></option>
+                                        </select>
+                                    </div>
                                 </form>
-                            </td>
-                            <td th:border="0">
-                                <form action="/admin/edit" method="get" target="_self">
-                                    <input type="hidden" name="edit" th:value="${lst.id}">
-                                    <input type="submit" value="Изменить">
-                                </form>
-                            </td>
-                        </tr>
-                    </table>
-                </div>
-                <div class="tab-pane fade" id="list-user" role="tabpanel" aria-labelledby="list-user-list">
-                    <div class="embed-responsive">
-                        <iframe class="embed-responsive-item" src="user.html"></iframe>
+                                </div>
+                            </div>
+                        </div>
                     </div>
                 </div>
             </div>
