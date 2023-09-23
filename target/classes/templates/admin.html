@@ -5,6 +5,7 @@
     <title>Страница администратора</title>
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css"
           integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+    <script src="../script/object.js"></script>
 </head>
 <body>
 <div>
@@ -48,7 +49,7 @@
                                 </div>
 
                                 <div class="bg-white p-3 border rounded-bottom">
-                                    <table class="table table-striped table-responsive-lg p-3">
+                                    <table class="table table-striped table-responsive-lg p-3" id="table-info">
                                         <thead>
                                         <tr>
                                             <th>ID</th>
@@ -71,19 +72,115 @@
                                             <td th:text="${lst.password}"></td>
                                             <td th:text="${lst.getCleanRoles()}" ></td>
                                             <td th:border="0">
-                                                <form action="/admin/delete" method="post">
-                                                    <input type="hidden" name="del" th:value="${lst.id}">
-                                                    <input type="submit" value="Удалить" class="btn btn-danger">
-                                                </form>
+                                                <button type="button" class="btn btn-danger" data-toggle="modal" data-target="#del" data-type="del">Удалить</button>
                                             </td>
                                             <td th:border="0">
-                                                <form action="/admin/edit" method="get" target="_self">
-                                                    <input type="hidden" name="edit" th:value="${lst.id}">
-                                                    <input type="submit" value="Изменить" class="btn btn-info">
-                                                </form>
+                                                <button type="button" class="btn btn-info" data-toggle="modal" data-target="#edit" data-type="edit">Изменить</button>
                                             </td>
                                         </tr>
                                     </table>
+
+                                    <div class="modal fade" id="edit" tabindex="-1" role="dialog" aria-labelledby="edit" aria-hidden="true">
+                                        <div class="modal-dialog modal-dialog-centered" role="document">
+                                            <div class="modal-content">
+                                                <form th:action="@{/admin/edit}" th:object="${userAdd}" method="post">
+                                                    <div class="modal-header">
+                                                        <h5 class="modal-title" id="editTitle">Изменение данных пользователя</h5>
+                                                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                                            <span aria-hidden="true">&times;</span>
+                                                        </button>
+                                                    </div>
+                                                    <div class="modal-body">
+                                                        <div class="form-group text-center">
+                                                            <label for="edit-id" class="font-weight-bold h5">ID</label>
+                                                            <input type="text" class="form-control" id="edit-id" aria-describedby="id" th:field="*{id}" readonly>
+                                                        </div>
+                                                        <div class="form-group text-center">
+                                                            <label for="edit-login" class="font-weight-bold h5">Логин</label>
+                                                            <input type="text" class="form-control" id="edit-login" aria-describedby="login" th:field="*{username}">
+                                                        </div>
+                                                        <div class="form-group text-center">
+                                                            <label for="edit-first_name" class="font-weight-bold mx-auto h5">Имя</label>
+                                                            <input type="text" class="form-control" id="edit-first_name" aria-describedby="first_name" th:field="*{firstName}">
+                                                        </div>
+                                                        <div class="form-group text-center">
+                                                            <label for="edit-last_name" class="font-weight-bold mx-auto h5">Фамилия</label>
+                                                            <input type="text" class="form-control" id="edit-last_name" aria-describedby="last_name" th:field="*{lastName}">
+                                                        </div>
+                                                        <div class="form-group text-center">
+                                                            <label for="edit-email" class="font-weight-bold mx-auto h5">Email</label>
+                                                            <input type="email" class="form-control" id="edit-email" aria-describedby="email" th:field="*{email}">
+                                                        </div>
+                                                        <div class="form-group text-center">
+                                                            <label for="edit-password" class="font-weight-bold mx-auto h5">Пароль</label>
+                                                            <input type="password" class="form-control" id="edit-password" aria-describedby="password" th:field="*{password}">
+                                                        </div>
+                                                        <div class="form-group text-center">
+                                                            <label for="edit-role" class="font-weight-bold mx-auto h5">Роль</label>
+                                                            <select size="2" multiple class="form-control" id="edit-role" th:field="*{roles}">
+                                                                <option th:each="lst1 : ${listRole}" th:value="${lst1.id}" th:text="${lst1.name}"></option>
+                                                            </select>
+                                                        </div>
+                                                    </div>
+                                                    <div class="modal-footer">
+                                                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Закрыть</button>
+                                                        <button type="submit" class="btn btn-primary">Сохранить</button>
+                                                    </div>
+                                                </form>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="modal fade" id="del" tabindex="-1" role="dialog" aria-labelledby="del" aria-hidden="true">
+                                        <div class="modal-dialog modal-dialog-centered" role="document">
+                                            <div class="modal-content">
+                                                <form th:action="@{/admin/delete}" method="post">
+                                                    <div class="modal-header">
+                                                        <h5 class="modal-title" id="delTitle">Изменение данных пользователя</h5>
+                                                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                                            <span aria-hidden="true">&times;</span>
+                                                        </button>
+                                                    </div>
+                                                    <div class="modal-body">
+                                                        <div class="form-group text-center">
+                                                            <label for="del-id" class="font-weight-bold h5">ID</label>
+                                                            <input type="text" class="form-control" id="del-id" name="delete" aria-describedby="id" readonly>
+                                                        </div>
+                                                        <div class="form-group text-center">
+                                                            <label for="del-login" class="font-weight-bold h5">Логин</label>
+                                                            <input type="text" class="form-control" id="del-login" aria-describedby="login" readonly>
+                                                        </div>
+                                                        <div class="form-group text-center">
+                                                            <label for="del-first_name" class="font-weight-bold mx-auto h5">Имя</label>
+                                                            <input type="text" class="form-control" id="del-first_name" aria-describedby="first_name" readonly>
+                                                        </div>
+                                                        <div class="form-group text-center">
+                                                            <label for="del-last_name" class="font-weight-bold mx-auto h5">Фамилия</label>
+                                                            <input type="text" class="form-control" id="del-last_name" aria-describedby="last_name" readonly>
+                                                        </div>
+                                                        <div class="form-group text-center">
+                                                            <label for="del-email" class="font-weight-bold mx-auto h5">Email</label>
+                                                            <input type="email" class="form-control" id="del-email" aria-describedby="email" readonly>
+                                                        </div>
+                                                        <div class="form-group text-center">
+                                                            <label for="del-password" class="font-weight-bold mx-auto h5">Пароль</label>
+                                                            <input type="password" class="form-control" id="del-password" aria-describedby="password" readonly>
+                                                        </div>
+                                                        <div class="form-group text-center">
+                                                            <label for="del-role" class="font-weight-bold mx-auto h5">Роль</label>
+                                                            <select size="2" multiple class="form-control" id="del-role" disabled>
+                                                                <option th:each="lst1 : ${listRole}" th:value="${lst1.id}" th:text="${lst1.name}" ></option>
+                                                            </select>
+                                                        </div>
+                                                    </div>
+
+                                                    <div class="modal-footer">
+                                                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Закрыть</button>
+                                                        <button type="submit" class="btn btn-danger">Удалить</button>
+                                                    </div>
+                                                </form>
+                                            </div>
+                                        </div>
+                                    </div>
                                 </div>
                             </div>
                         </div>
@@ -95,34 +192,37 @@
                             <div class="bg-white border rounded-bottom">
                                 <div class="w-25 mx-auto py-3">
                                 <form th:action="@{/admin/addUser}" th:object="${userAdd}" method="post">
-                                    <div class="form-group ">
-                                        <p class="font-weight-bold h5 ">Логин</p>
+                                    <div class="form-group text-center">
+                                        <label for="login" class="font-weight-bold h5">Логин</label>
                                         <input type="text" class="form-control" id="login" aria-describedby="login" placeholder="Логин" th:field="*{username}">
                                     </div>
-                                    <div class="form-group">
+                                    <div class="form-group text-center">
                                         <label for="first_name" class="font-weight-bold mx-auto h5">Имя</label>
                                         <input type="text" class="form-control" id="first_name" aria-describedby="first_name" placeholder="Имя" th:field="*{firstName}">
                                     </div>
-                                    <div class="form-group">
+                                    <div class="form-group text-center">
                                         <label for="last_name" class="font-weight-bold mx-auto h5">Фамилия</label>
                                         <input type="text" class="form-control" id="last_name" aria-describedby="last_name" placeholder="Фамилия" th:field="*{lastName}">
                                     </div>
-                                    <div class="form-group">
+                                    <div class="form-group text-center">
                                         <label for="email" class="font-weight-bold mx-auto h5">Email</label>
                                         <input type="email" class="form-control" id="email" aria-describedby="email" placeholder="Email" th:field="*{email}">
                                     </div>
-                                    <div class="form-group">
+                                    <div class="form-group text-center">
                                         <label for="password" class="font-weight-bold mx-auto h5">Пароль</label>
                                         <input type="password" class="form-control" id="password" aria-describedby="password" placeholder="Пароль" th:field="*{password}">
                                         <th:block th:if="${#fields.hasErrors('password')}">
                                             <div style="color : red" th:errors="*{password}">invalid</div>
                                         </th:block>
                                     </div>
-                                    <div class="form-group">
+                                    <div class="form-group text-center">
                                         <label for="role" class="font-weight-bold mx-auto h5">Роль</label>
                                         <select size="2" multiple class="form-control" id="role" th:field="*{roles}">
                                             <option th:each="lst : ${listRole}" th:value="${lst.id}" th:text="${lst.name}"></option>
                                         </select>
+                                    </div>
+                                    <div class="form-group text-center">
+                                        <input type="submit" value="Сохранить" class="btn btn-success btn-lg">
                                     </div>
                                 </form>
                                 </div>
@@ -134,6 +234,34 @@
         </div>
     </div>
 </div>
+
+<script>
+    const table = document.getElementById('table-info');
+
+    table.addEventListener('click', (e) => {
+        if (e.target.tagName !== 'BUTTON') return;
+        const tr = e.target.closest('tr');
+        if (e.target.dataset.type == 'edit') editRow(tr);
+        if (e.target.dataset.type == 'del') delRow(tr);
+    });
+
+    function editRow(tr) {
+        $("#edit-id").attr("value", tr.cells[0].innerText);
+        $("#edit-login").attr("value", tr.cells[1].innerText);
+        $("#edit-first_name").attr("value", tr.cells[2].innerText);
+        $("#edit-last_name").attr("value", tr.cells[3].innerText);
+        $("#edit-email").attr("value", tr.cells[4].innerText);
+    }
+    function delRow(tr) {
+        $("#del-id").attr("value", tr.cells[0].innerText);
+        $("#del-login").attr("value", tr.cells[1].innerText);
+        $("#del-first_name").attr("value", tr.cells[2].innerText);
+        $("#del-last_name").attr("value", tr.cells[3].innerText);
+        $("#del-email").attr("value", tr.cells[4].innerText);
+        $("#del-but").attr("value",  tr.cells[0].innerText);
+    }
+</script>
+
 <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js" integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1" crossorigin="anonymous"></script>
 <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js" integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM" crossorigin="anonymous"></script>

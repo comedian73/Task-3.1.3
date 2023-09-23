@@ -7,6 +7,7 @@ import org.springframework.security.core.userdetails.UserDetails;
 import javax.persistence.*;
 import javax.validation.constraints.Email;
 import javax.validation.constraints.NotEmpty;
+import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 import java.util.Collection;
 import java.util.Set;
@@ -35,16 +36,16 @@ public class User implements UserDetails {
    private String lastName;
 
    @Email(regexp = ".+@.+\\..+|")
-   @NotEmpty(message = "Не может быть пустым")
+   @NotNull(message = "Не может быть пустым")
    @Column(name = "email")
    private String email;
 
-   @NotEmpty(message = "Не может быть пустым")
+   @NotNull(message = "Не может быть пустым")
    @Size(min = 3, message = "Не менее 3-х символов")
    @Column(name = "username")
    private String username;
 
-   @NotEmpty(message = "Не может быть пустым")
+   @NotNull(message = "Не может быть пустым")
    @Size(min = 4, message = "Не менее 4-х сомволов")
    @Column(name = "password")
    private String password;
