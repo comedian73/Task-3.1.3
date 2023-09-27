@@ -46,7 +46,7 @@ public class User implements UserDetails {
    private String username;
 
    @NotNull(message = "Не может быть пустым")
-   @Size(min = 4, message = "Не менее 4-х сомволов")
+   @Size(min = 4, message = "Не менее 4-х и не более 20 сомволов")
    @Column(name = "password")
    private String password;
 
