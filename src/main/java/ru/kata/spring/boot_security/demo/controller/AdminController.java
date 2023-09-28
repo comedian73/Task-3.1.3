@@ -41,7 +41,8 @@ public class AdminController {
         if (result.hasErrors()) {
             return "admin";
         }
-        userService.saveUser(user);
+
+        userService.updateUser(user);
         return "redirect:/admin";
     }
 

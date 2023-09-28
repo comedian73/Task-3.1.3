@@ -44,11 +44,17 @@ public class UserService implements UserDetailsService {
     }
 
     public void saveUser(User user) {
-        if (user.getPassword().length() <= 20) {
-            user.setPassword(passwordEncoder.encode(user.getPassword()));
-            userRepository.save(user);
-        }
+        user.setPassword(passwordEncoder.encode(user.getPassword()));
         userRepository.save(user);
+    }
+
+    public void updateUser(User user) {
+        User userBD = userRepository.findById(user.getId()).orElse(new User());
+        if (user.getPassword().equals(userBD.getPassword())) {
+            userRepository.save(user);
+            return;
+        }
+        saveUser(user);
     }
 
     public void delete(Long id) {
